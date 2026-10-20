@@ -9,7 +9,7 @@ export default function SiteFooter() {
           <div className="ft-sub">Policy research for economic and social development</div>
         </div>
         <nav aria-label="Footer navigation">
-          <Link href="/book">Rich Country, Poor Citizens</Link>
+          <Link href="/rich-country-poor-citizens">Rich Country, Poor Citizens</Link>
           <Link href="/contents">Contents</Link>
           <Link href="/charts">Charts</Link>
           <Link href="/">Public Policy Foundation</Link>

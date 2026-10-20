@@ -6,19 +6,19 @@ import { useEffect, useState } from "react";
 import { BASE_PATH } from "@/lib/basePath";
 
 const BOOK_NAV = [
-  { href: "/book", label: "Book home" },
+  { href: "/rich-country-poor-citizens", label: "Book home" },
   { href: "/contents", label: "Contents" },
   { href: "/charts", label: "Charts" },
   { href: "/search", label: "Search" },
 ];
 
 const FOUNDATION_NAV = [
-  { href: "/book", label: "Publications" },
+  { href: "/rich-country-poor-citizens", label: "Publications" },
 ];
 
 function isBookPath(pathname: string): boolean {
   return (
-    pathname.startsWith("/book") ||
+    pathname.startsWith("/rich-country-poor-citizens") ||
     pathname.startsWith("/chapters") ||
     pathname.startsWith("/contents") ||
     pathname.startsWith("/charts") ||
@@ -60,7 +60,7 @@ export default function SiteHeader() {
             <Link href="/" className="site-back-link">
               ← Public Policy Foundation
             </Link>
-            <Link href="/book" className="site-brand">
+            <Link href="/rich-country-poor-citizens" className="site-brand">
               <div className="brand-mark">R</div>
               <span className="brand-name">Rich Country, Poor Citizens</span>
             </Link>
