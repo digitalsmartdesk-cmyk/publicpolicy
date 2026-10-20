@@ -1,0 +1,800 @@
+<title>Household Balance Sheet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+/* Layout: a quarterly tracker. Headline, four key figures, a ten-indicator panel, findings, twelve charts in three groups, then judgment, next steps, editor's notes and sources. Orange marks debt, blue marks assets, aqua marks net assets and savings, violet marks the BIS measure, grey marks GDP and peers. */
+:root {
+  --bg: #F9F9F7; --fg: #0B0B0B; --ink2: #52514E; --muted: #898781;
+  --card: #FCFCFB; --line: rgba(11,11,11,0.10); --grid: #E1E0D9; --axisc: #C3C2B7;
+  --accent: #A94B00; --accent-soft: #FBEBD9;
+  --debt: #EB6834; --assets: #2A78D6; --net: #1BAF7A; --gdp: #898781; --bis: #6250D6;
+  --ok: #006300; --ok-soft: #E1F2E8; --warn: #8A5A00; --warn-soft: #FBF0CC; --todo-soft: #E8E7E2;
+  --font-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D0D0D; --fg: #F0EFEC; --ink2: #C3C2B7; --muted: #898781;
+    --card: #1A1A19; --line: rgba(255,255,255,0.10); --grid: #2C2C2A; --axisc: #383835;
+    --accent: #F2A03D; --accent-soft: #3A2A15;
+    --debt: #D95926; --assets: #3987E5; --net: #199E70; --gdp: #898781; --bis: #9085E9;
+    --ok: #0CA30C; --ok-soft: #14301F; --warn: #F0C65A; --warn-soft: #38300F; --todo-soft: #2C2C2A; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D0D0D; --fg: #F0EFEC; --ink2: #C3C2B7; --muted: #898781;
+  --card: #1A1A19; --line: rgba(255,255,255,0.10); --grid: #2C2C2A; --axisc: #383835;
+  --accent: #F2A03D; --accent-soft: #3A2A15;
+  --debt: #D95926; --assets: #3987E5; --net: #199E70; --gdp: #898781; --bis: #9085E9;
+  --ok: #0CA30C; --ok-soft: #14301F; --warn: #F0C65A; --warn-soft: #38300F; --todo-soft: #2C2C2A; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  padding-block: 40px 80px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 880px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; text-wrap: balance; margin: 0; line-height: 1.22; }
+h1 { font-size: clamp(30px, 5.5vw, 44px); }
+h2 { font-size: 26px; }
+h3 { font-size: 19px; }
+p { margin: 0; }
+a { color: var(--accent); }
+section, header { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink2); }
+.lede { font-size: 18px; max-width: 64ch; }
+.note { color: var(--ink2); font-size: 14px; }
+
+/* Key figures */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+.tile { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.tile .lab { font-size: 13px; color: var(--ink2); }
+.tile .val { font-family: var(--font-display); font-size: 30px; font-weight: 600; line-height: 1.1; }
+.tile .sub { font-size: 13px; color: var(--ink2); }
+
+/* Indicator panel */
+.panel-table { background: var(--card); border: 1px solid var(--line); border-radius: 6px; overflow-x: auto; }
+.panel-table table { min-width: 800px; }
+td.ind { font-weight: 500; }
+td.latest strong { font-size: 15px; }
+td.latest small { display: block; color: var(--ink2); font-size: 12.5px; }
+td.chg { color: var(--ink2); font-size: 14px; }
+td.peer { color: var(--ink2); font-size: 13.5px; }
+td.spark svg { display: block; }
+
+/* Findings */
+.findings { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px; max-width: 72ch; }
+
+/* Chart cards */
+.group { display: flex; flex-direction: column; gap: 16px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.card header { gap: 4px; }
+.card .sub { font-size: 14px; color: var(--ink2); }
+.tier { align-self: flex-start; font-family: var(--font-mono); font-size: 11.5px; padding: 2px 8px; border-radius: 3px; margin-top: 4px; display: inline-block; }
+td .tier { white-space: nowrap; margin-top: 0; }
+.tier.primary { background: var(--ok-soft); color: var(--ok); }
+.tier.derived { background: var(--accent-soft); color: var(--accent); }
+.tier.second { background: var(--warn-soft); color: var(--warn); }
+.tier.todo { background: var(--todo-soft); color: var(--ink2); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink2); }
+.legend span.item { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; width: 16px; height: 0; border-top: 2px solid var(--c); }
+.legend i.sq { width: 12px; height: 12px; border-top: 0; background: var(--c); border-radius: 2px; }
+.plot { position: relative; min-width: 0; }
+.plot svg { display: block; max-width: 100%; overflow: visible; }
+.plot svg:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+svg .grid { stroke: var(--grid); stroke-width: 1; }
+svg .axis { stroke: var(--axisc); stroke-width: 1; }
+svg .cross { stroke: var(--axisc); stroke-width: 1; }
+svg .tick { fill: var(--ink2); font-size: 11px; font-family: var(--font-body); }
+svg .endlabel { fill: var(--fg); font-size: 12.5px; font-weight: 600; font-family: var(--font-body); }
+svg .mlabel { fill: var(--fg); font-size: 12px; font-family: var(--font-body); }
+svg .ring { stroke: var(--card); stroke-width: 2; }
+.chart-note { font-size: 13px; color: var(--ink2); }
+.source { font-size: 12.5px; color: var(--ink2); }
+
+/* Bars */
+.bars { display: flex; flex-direction: column; gap: 10px; }
+.brow { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 12px; align-items: center; border-radius: 4px; }
+.brow:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.blabel { font-size: 14px; color: var(--ink2); }
+.btrack { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.bar { height: 20px; border-radius: 0 4px 4px 0; flex: none; transition: filter .12s; }
+.brow:hover .bar, .brow:focus-visible .bar { filter: brightness(1.15); }
+.bval { font-size: 14px; font-weight: 600; white-space: nowrap; }
+.btracks { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.btracks .bar { height: 16px; }
+.brow.pair { align-items: start; }
+.brow.pair .blabel { padding-top: 0; }
+@media (max-width: 520px) {
+  .brow { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .card { padding: 14px; }
+}
+
+/* Tooltip */
+#tip { position: fixed; z-index: 50; pointer-events: none; background: var(--card); color: var(--fg); border: 1px solid var(--axisc); border-radius: 6px; padding: 8px 10px; font-size: 13px; box-shadow: 0 4px 14px rgba(0,0,0,0.18); max-width: 280px; }
+#tip .tip-title { color: var(--ink2); margin-bottom: 4px; }
+#tip .tip-row { display: flex; align-items: center; gap: 8px; }
+#tip .tip-key { width: 12px; border-top: 2px solid var(--axisc); flex: none; }
+#tip .tip-val { font-size: 14px; }
+#tip .tip-name { color: var(--ink2); }
+
+/* Tables */
+details.data { font-size: 14px; }
+details.data summary { cursor: pointer; color: var(--accent); width: fit-content; }
+details.data summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.table-scroll { overflow-x: auto; margin-top: 8px; border: 1px solid var(--line); border-radius: 6px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th { font-family: var(--font-mono); font-weight: 500; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink2); white-space: nowrap; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr:last-child td { border-bottom: 0; }
+.static-table { background: var(--card); border: 1px solid var(--line); border-radius: 6px; overflow-x: auto; }
+.static-table table { min-width: 620px; }
+
+/* Panels */
+.box { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.box ul, .box ol { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px; }
+.editor { border-color: var(--warn); }
+.editor h2 { font-size: 22px; }
+.sources { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.sources li { overflow-wrap: anywhere; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Public Policy Foundation · The Household Balance Sheet · Issue 1, draft for review · updated 18 October 2026</div>
+    <h1>Household debt reached 45.9% of GDP in March 2026</h1>
+    <p class="lede">Since mid-2022, household borrowing has grown almost twice as fast as the economy and faster than household financial savings. In 2025-26 new borrowing rose to 6.2% of GDP while net financial savings fell to 6.3%. This draft covers RBI data to March 2026 and BIS data to December 2025.</p>
+  </header>
+
+  <section aria-label="Key figures">
+    <div class="tiles">
+      <div class="tile"><span class="lab">Household financial liabilities</span><span class="val">₹158.5 lakh crore</span><span class="sub">45.9% of GDP, March 2026</span></div>
+      <div class="tile"><span class="lab">Debt per ₹100 of financial assets</span><span class="val">₹32.3</span><span class="sub">₹27.1 in June 2022</span></div>
+      <div class="tile"><span class="lab">Growth, June 2022 to March 2026</span><span class="val">+78%</span><span class="sub">debt, against +49% for financial assets and +41% for nominal GDP</span></div>
+      <div class="tile"><span class="lab">New borrowing, 2025-26</span><span class="val">6.2% of GDP</span><span class="sub">4.9% in 2024-25. Net financial savings fell to 6.3% from 7.1%.</span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="panel">
+    <h2 id="panel">The tracker: ten indicators</h2>
+    <p class="note">Each row gives the latest value, the change over the last 12 months (or the basis stated), the trend and where the figure comes from. A peer anchor exists only for the BIS measure so far. The debt-service ratio still has to be sourced.</p>
+    <div class="panel-table"><table id="panel-t">
+      <thead><tr><th>Indicator</th><th>Latest</th><th>Change</th><th>Trend</th><th>Peer anchor</th><th>Source</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </section>
+
+  <section aria-labelledby="findings">
+    <h2 id="findings">Findings</h2>
+    <p class="note">Statements of what the data show. Judgment follows further down, kept separate.</p>
+    <ol class="findings">
+      <li>Households owed ₹158.5 lakh crore at the end of March 2026, which is 45.9% of GDP. In June 2022 the figure was 36.4%.</li>
+      <li>The ratio rose in 14 of the last 15 quarters. It was flat in one (June 2024) and did not fall in any.</li>
+      <li>Over the same period debt grew 78%, household financial assets 49% and nominal GDP 41%.</li>
+      <li>Households added ₹21.5 lakh crore of debt in 2025-26, which raised the debt stock by 15.7%. New borrowing was 6.2% of GDP, up from 4.9% in 2024-25.</li>
+      <li>Net financial savings were 6.3% of GDP in 2025-26, down from 7.1% in 2024-25 and up from 5.3% in 2022-23. The fall is a one-year move.</li>
+      <li>New borrowing equalled about half (49.8%) of the gross financial assets households added in 2025-26. In 2024-25 it was about 41%.</li>
+      <li>Debt per ₹100 of financial assets rose from ₹27.1 to ₹32.3. That is the highest of the 16 quarters in the RBI series.</li>
+      <li>Financial assets fell from 152.2% of GDP in September 2024 to 141.9% in March 2026. Equity and mutual funds make up 28.6% of them and move with market prices.</li>
+      <li>Banks hold 81.2% of household debt and other financial institutions 18.8%.</li>
+      <li>On the BIS measure, credit to households was 47.8% of GDP in the fourth quarter of 2025. That is the highest in a series that begins in 2007, when it peaked at 46.2%. Among seven countries, India ranks fifth, between China (58.0%) and Brazil (37.6%).</li>
+    </ol>
+  </section>
+
+  <section class="group" aria-labelledby="g1">
+    <h2 id="g1">How much households owe</h2>
+
+    <article class="card">
+      <header>
+        <h3>Household debt has risen from 36.4% to 45.9% of GDP since June 2022</h3>
+        <p class="sub">Household financial liabilities, % of GDP, quarterly</p>
+        <span class="tier primary">RBI Bulletin, primary data</span>
+      </header>
+      <div class="plot" id="p1"></div>
+      <div id="t1"></div>
+      <p class="source">Source: RBI Bulletin, September 2026, Table 52(b). Ratios use the NSO's 2025-26 GDP estimates of 5 June 2026.</p>
+    </article>
+
+    <article class="card">
+      <header>
+        <h3>Debt grew 78% against 49% for financial assets and 41% for GDP</h3>
+        <p class="sub">Index, June 2022 = 100, quarterly</p>
+        <span class="tier derived">Calculated from RBI data</span>
+      </header>
+      <div class="legend" id="l2"></div>
+      <div class="plot" id="p2"></div>
+      <div id="t2"></div>
+      <p class="source">Source: RBI Bulletin, September 2026, Table 52(b); Foundation calculation. Nominal GDP is the figure implied by the RBI's own ratios.</p>
+    </article>
+
+    <article class="card">
+      <header>
+        <h3>The RBI and BIS measures differ in level but both rise</h3>
+        <p class="sub">Household debt, % of GDP, quarterly, June 2022 to March 2026. The BIS series ends in December 2025.</p>
+        <span class="tier primary">RBI and BIS, primary data</span>
+      </header>
+      <div class="legend" id="l3"></div>
+      <div class="plot" id="p3"></div>
+      <div id="t3"></div>
+      <p class="source">Sources: RBI Bulletin, September 2026, Table 52(b); BIS via FRED series QINHAM770A. The perimeter and method differ, so the two should not be mixed in one calculation.</p>
+    </article>
+
+    <article class="card">
+      <header>
+        <h3>On the BIS measure, household credit is at its highest since 2007</h3>
+        <p class="sub">Total credit to households and non-profit institutions serving households, % of GDP, quarterly, 2007 to 2025</p>
+        <span class="tier primary">BIS series via FRED, primary data</span>
+      </header>
+      <div class="plot" id="p4"></div>
+      <div id="t4"></div>
+      <p class="source">Source: Bank for International Settlements, via FRED series QINHAM770A (updated 15 June 2026).</p>
+    </article>
+
+    <article class="card">
+      <header>
+        <h3>India ranks fifth of seven on household credit to GDP</h3>
+        <p class="sub">Total credit to households, % of GDP, fourth quarter of 2025</p>
+        <span class="tier primary">BIS series via FRED, primary data</span>
+      </header>
+      <div class="plot" id="p5"></div>
+      <div id="t5"></div>
+      <p class="chart-note">These are the peers named in the chapter 2 plan. A higher ratio is not worse in itself, since it also reflects financial depth and income levels.</p>
+      <p class="source">Source: BIS via FRED series Q[country]HAM770A (updated 15 June 2026), each adjusted for breaks.</p>
+    </article>
+
+    <article class="card">
+      <header>
+        <h3>Debt per ₹100 of financial assets is at its highest in the series</h3>
+        <p class="sub">Household financial liabilities per ₹100 of household financial assets, ₹, quarterly</p>
+        <span class="tier derived">Calculated from RBI data</span>
+      </header>
+      <div class="plot" id="p6"></div>
+      <div id="t6"></div>
+      <p class="chart-note">Earlier highs were ₹30.2, in March 2023 and again in March 2025.</p>
+      <p class="source">Source: RBI Bulletin, September 2026, Table 52(b); Foundation calculation.</p>
+    </article>
+  </section>
+
+  <section class="group" aria-labelledby="g2">
+    <h2 id="g2">What households own and save</h2>
+
+    <article class="card">
+      <header>
+        <h3>Financial assets have fallen back to 141.9% of GDP, and net financial assets to 96.0%</h3>
+        <p class="sub">% of GDP, quarterly. Net financial assets are financial assets minus financial liabilities.</p>
+        <span class="tier derived">RBI data; net assets calculated</span>
+      </header>
+      <div class="legend" id="l7"></div>
+      <div class="plot" id="p7"></div>
+      <div id="t7"></div>
+      <p class="source">Source: RBI Bulletin, September 2026, Table 52(b); Foundation calculation. Financial assets exclude gold and property.</p>
+    </article>
+
+    <article class="card">
+      <header>
+        <h3>Bank deposits are the largest holding, and equity and mutual funds together are 28.6%</h3>
+        <p class="sub">Household financial assets by instrument, March 2026, % of ₹490.2 lakh crore</p>
+        <span class="tier primary">RBI Bulletin, primary data</span>
+      </header>
+      <div class="plot" id="p8"></div>
+      <div id="t8"></div>
+      <p class="source">Source: RBI Bulletin, September 2026, Table 52(b); shares calculated by the Foundation. Pension funds and PPF are shown together.</p>
+    </article>
+
+    <article class="card">
+      <header>
+        <h3>In 2025-26 net savings fell to 6.3% of GDP while new borrowing rose to 6.2%</h3>
+        <p class="sub">Annual flows of household net financial savings and new borrowing, % of GDP</p>
+        <span class="tier primary">RBI Bulletin, primary data</span>
+      </header>
+      <div class="legend" id="l9"></div>
+      <div class="plot" id="p9"></div>
+      <div id="t9"></div>
+      <p class="chart-note">Net financial savings are gross financial assets added minus new borrowing. Figures for 2025-26 are preliminary. The series starts in 2022-23 because it uses the new GDP base year of 2022-23.</p>
+      <p class="source">Source: RBI Bulletin, September 2026, Table 52(a), Flow of Financial Assets and Liabilities of Households.</p>
+    </article>
+  </section>
+
+  <section class="group" aria-labelledby="g3">
+    <h2 id="g3">What the borrowing is made of</h2>
+
+    <article class="card">
+      <header>
+        <h3>Non-housing retail loans now make up 58.4% of household debt</h3>
+        <p class="sub">Share of household debt, %</p>
+        <span class="tier second">Press report of RBI data, verify before publishing</span>
+      </header>
+      <div class="plot" id="p10"></div>
+      <div id="t10"></div>
+      <p class="chart-note">Three outlets (RMA India, Business Today and The India Forum) describe the 58.4% as a share of total household borrowing. In the same reports, housing loans are 26.3% and agriculture and business loans 15.3%. Another report puts NBFC loans to households at ₹21.2 lakh crore in March 2026, up from ₹8.7 lakh crore in June 2022.</p>
+      <p class="source">Sources: Business Today (22 July 2026) and The India Forum, both citing the RBI Financial Stability Report of June 2026; CapitalVia for NBFC loans. The 2019-20 figure is given as "about 50%".</p>
+    </article>
+
+    <article class="card">
+      <header>
+        <h3>Bank gold loans have grown from ₹0.25 lakh crore to ₹4.89 lakh crore since 2019</h3>
+        <p class="sub">Bank gold loans outstanding, ₹ lakh crore. The dates are not evenly spaced.</p>
+        <span class="tier second">Press report of RBI data, verify before publishing</span>
+      </header>
+      <div class="plot" id="p11"></div>
+      <div id="t11"></div>
+      <p class="chart-note">The Financial Stability Report is reported to give a compound annual growth rate of 42.4% for gold loans since March 2024, nearly double the 23% growth of non-housing retail loans. The amounts charted here imply far faster growth over the same two years (about 122% a year), so the base or period of the reported rate must be checked, and to call gold the largest non-housing retail segment.</p>
+      <p class="source">Sources: The India Forum (July 2026), citing RBI data, for the amounts; Business Standard (30 June 2026), reporting the Financial Stability Report, for the growth rate. The India Forum also reports that the RBI links the recent surge largely to existing borrowers re-borrowing against the same collateral.</p>
+    </article>
+
+    <article class="card">
+      <header>
+        <h3>Delinquency on small personal loans is highest at fintech lenders, at 6.4%</h3>
+        <p class="sub">Delinquency on personal loans below ₹50,000, by lender type, March 2026, %</p>
+        <span class="tier second">Press report of the RBI FSR, verify before publishing</span>
+      </header>
+      <div class="plot" id="p12"></div>
+      <div id="t12"></div>
+      <p class="chart-note">Fintech lenders hold 56.8% of personal loans below ₹50,000, and 70.5% of their loan books are unsecured. Credit from fintech lenders grew 41.6% in the year, against 20.1% for the segment.</p>
+      <p class="source">Source: The Economic Times report of the RBI Financial Stability Report, 1 July 2026 (via Vision IAS). Two other outlets give an earlier figure of about 4.5%, two years before. The Economic Times report does not, so it is not charted.</p>
+    </article>
+  </section>
+
+  <section aria-labelledby="judgment">
+    <h2 id="judgment">How to read this</h2>
+    <p class="note">Judgment, not measurement.</p>
+    <div class="box">
+      <ul>
+        <li>The debt-to-assets ratio is a rough guide. Financial assets leave out gold and property, which many households hold, so ₹32 of debt per ₹100 of financial assets overstates debt against total household wealth.</li>
+        <li>The series covers all households together. It cannot say whether the households that borrow are the ones that hold the deposits and shares. That needs household-level data, which is the aim of the January brief.</li>
+        <li>"Savings down, debt up" describes 2025-26 against 2024-25. Over the four years from 2022-23, net financial savings rose from 5.3% to 6.3% of GDP, so the savings side has not fallen over the longer period. The debt side has risen steadily.</li>
+        <li>The RBI is reported to say the rise is driven mainly by non-housing retail loans. That is a broad group that includes personal, vehicle, credit card and gold loans, so it does not show that households are borrowing to consume.</li>
+        <li>Because equity and mutual funds are 28.6% of financial assets, part of the swings in the asset ratio reflects prices. This draft does not separate price changes from new saving.</li>
+        <li>India's household credit ratio is below that of China, the United States, Thailand and South Korea. A lower ratio does not by itself mean lower risk, because the pace of increase and the share of unsecured loans also matter.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="next">
+    <h2 id="next">Before this is published</h2>
+    <div class="box">
+      <ol>
+        <li>Check whether the June 2026 quarter has appeared in a newer RBI Bulletin. March 2026 data first appeared in the July 2026 Bulletin, so the next quarter may arrive within weeks.</li>
+        <li>Check charts 10 to 12 and the NBFC figures against Chapter I of the RBI Financial Stability Report of June 2026 and the RBI's bank-credit statistics. They currently rest on press reports, and the RBI's PDFs could not be read automatically. A person needs to open or attach them.</li>
+        <li>Pull the lender split (banks, NBFCs, housing finance companies) from the full Bulletin table so it comes from the RBI and not from a secondary calculation.</li>
+        <li>Source the household debt-service ratio (BIS debt service ratios, RBI) and build peer anchors for the indicators that have none.</li>
+        <li>Choose a household-level source for the "who is borrowing" brief. Candidates to assess: the NSS All India Debt and Investment Survey, credit bureau data and RBI household surveys.</li>
+        <li>Add the methods page, a corrections note and the named lead's byline, as decided.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section aria-labelledby="editor">
+    <div class="box editor">
+      <h2 id="editor">Editor's notes for the Foundation, remove before publishing</h2>
+      <p>Four different household-debt figures are in circulation. The headline here uses the first.</p>
+      <div class="static-table">
+        <table>
+          <thead><tr><th>Measure</th><th>Date</th><th class="num">% of GDP</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td>RBI Bulletin, household financial liabilities, September 2026 edition</td><td>March 2026</td><td class="num">45.9</td><td>Headline. Latest vintage.</td></tr>
+            <tr><td>RBI Bulletin, August 2026 edition</td><td>March 2026</td><td class="num">45.8</td><td>Superseded by revision.</td></tr>
+            <tr><td>RBI Financial Stability Report, household debt (press reports)</td><td>September 2025</td><td class="num">45.5</td><td>Different measure and date. Do not mix.</td></tr>
+            <tr><td>BIS credit to households</td><td>December 2025</td><td class="num">47.8</td><td>Long-run context and peers (charts 3 to 5).</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul>
+        <li>The updated research document now separates the September 2025 figure (45.5%) from March 2026 (45.8%). It still says to quote the lower figure as the conservative one, which compares two different dates. This page quotes the latest Bulletin figure, 45.9%, and labels the measure.</li>
+        <li>The document's asset ratios of 152.6% (September 2024) and 141.6% (March 2026) come from the August edition. The September edition revises them to 152.2% and 141.9%. This draft uses the September edition throughout and records the vintage on every row of the data sheet.</li>
+        <li>The document gives the 2007 BIS level as 45.4%. That is the first quarter of the series (Q2 2007). The 2007 high is 46.2% in Q3 2007. The 2016 low of 33.1%, the 2020 high of 44.3% and the latest 47.8% match the document.</li>
+        <li>Chapter plan alignment. (a) The chapter 1 plan leads with the BIS 47.8%, and one working title is "47.8%", while the plan also says to headline the RBI series. This page headlines the RBI figure. (b) The chapter 3 working title "Savings Down, Debt Up" fits only the last year, as set out under "How to read this". (c) The chapter 4 plan describes the 58.4% as a share of "retail credit". RMA India, Business Today and The India Forum all describe it as a share of household borrowing, so the plan's wording should change. The date of the 58.4% is still unconfirmed. (d) The AI indicator launches in December in the roadmap but in months 4 to 8 in the chapter plan.</li>
+        <li>The annual flow table uses the new GDP base year (2022-23), while the stock ratios use the NSO's 2025-26 estimates of 5 June 2026. The two sets of ratios are not directly comparable, and older editions of the flow table use the old base, so I did not extend the savings series back before 2022-23. As a cross-check, 2025-26 new borrowing of ₹21.51 lakh crore matches the 12-month rise in the debt stock (₹21.51 lakh crore).</li>
+        <li>The document says the sources do not show what is driving the rise. The Financial Stability Report, as reported, points to non-housing retail loans. Chart 10 uses that, but it is a press report to be checked.</li>
+        <li>Source check, 18 October 2026. I found the Financial Stability Report of 30 June 2026 on the RBI site, but its PDFs show a human-verification page to automated readers, so I could not read the text. I did not work around this. Instead I compared independent press reports of the report. The 58.4% share, the 42.4% gold-loan growth rate and the 6.4% fintech delinquency each appear in two or three outlets with matching wording. That makes them likely but not verified. Someone needs to open Chapter I of the report and check them.</li>
+        <li>The 6.4% delinquency figure applies to fintech lenders' personal loans below ₹50,000, not to all small-ticket loans. Business Today and The India Forum describe it more loosely and add "up from about 4.5% two years earlier". The Economic Times report of the Financial Stability Report gives no earlier figure, so I removed the comparison.</li>
+        <li>Trading Economics shows 49.1% for the first quarter of 2026 on the BIS measure. I could not confirm it in the FRED series, which was last updated before that quarter, so it is not used.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="src">
+    <h2 id="src">Sources</h2>
+    <ul class="sources">
+      <li><a href="https://rbi.org.in/Scripts/BS_ViewBulletin.aspx?Id=24506">RBI Bulletin, 25 September 2026, Table 52(b): Stocks of Financial Assets and Liabilities of Households, Select Indicators</a> (primary; charts 1, 2, 3, 6, 7, 8)</li>
+      <li><a href="https://rbi.org.in/Scripts/BS_ViewBulletin.aspx?Id=24505">RBI Bulletin, 25 September 2026, Table 52(a): Flow of Financial Assets and Liabilities of Households</a> (primary; chart 9)</li>
+      <li><a href="https://rbi.org.in/Scripts/BS_ViewBulletin.aspx?Id=24435">RBI Bulletin, 25 August 2026, Table 52(b)</a> and <a href="https://rbi.org.in/Scripts/BS_ViewBulletin.aspx?Id=24363">22 July 2026, Table 52(b)</a> (earlier vintages, for comparison)</li>
+      <li><a href="https://fred.stlouisfed.org/series/QINHAM770A">FRED: Total Credit to Households and NPISHs, Adjusted for Breaks, for India, % of GDP (BIS)</a> (charts 3 and 4)</li>
+      <li>FRED peer series, same title: <a href="https://fred.stlouisfed.org/series/QCNHAM770A">China</a>, <a href="https://fred.stlouisfed.org/series/QBRHAM770A">Brazil</a>, <a href="https://fred.stlouisfed.org/series/QIDHAM770A">Indonesia</a>, <a href="https://fred.stlouisfed.org/series/QTHHAM770A">Thailand</a>, <a href="https://fred.stlouisfed.org/series/QKRHAM770A">Korea</a>, <a href="https://fred.stlouisfed.org/series/QUSHAM770A">United States</a> (chart 5)</li>
+      <li><a href="https://www.rbi.org.in/Scripts/PublicationReportDetails.aspx?UrlPage=&amp;ID=1319">RBI Financial Stability Report, June 2026</a> (primary; to be read and checked, see editor's notes)</li>
+      <li><a href="https://www.businesstoday.in/latest/economy/story/indias-household-debt-rises-to-45-5-of-gdp-non-housing-retail-loans-account-for-58-4-show-data-544604-2026-07-22">Business Today, 22 July 2026: household debt and loan composition</a> (secondary; chart 10)</li>
+      <li><a href="https://dce.visionias.in/upsc-daily-news-summary/article/2026-07-01/the-economic-times/economy/fintechs-capture-57-share-of-small-personal-loans-as-stress-mounts-rbi-report">The Economic Times, 1 July 2026, via Vision IAS: fintechs and small personal loans</a> (secondary; chart 12)</li>
+      <li><a href="https://www.business-standard.com/finance/news/rising-gold-prices-drive-surge-in-gold-loans-lower-ltv-ratios-rbi-126063001314_1.html">Business Standard, 30 June 2026: gold loans in the Financial Stability Report</a> (secondary; chart 11)</li>
+      <li><a href="https://rmaindia.org/reserve-bank-of-india-rbi-releases-financial-stability-report-june-2026/">RMA India: summary of the Financial Stability Report, June 2026</a> (secondary; chart 10)</li>
+      <li><a href="https://www.theindiaforum.in/economy/great-borrowing-boom">The India Forum: The Great Borrowing Boom</a> (secondary; charts 10 and 11)</li>
+      <li><a href="https://www.capitalvia.com/insights/india-household-debt-45-9-percent-of-gdp-march-2026/">CapitalVia: India's household debt hits 45.9% of GDP</a> (secondary; NBFC loans)</li>
+      <li><a href="https://thecsrjournal.in/indian-families-hold-more-financial-assets-but-debt-is-rising-faster">The CSR Journal: Indian families hold more financial assets, but debt is rising faster</a> (secondary; NBFC share)</li>
+    </ul>
+    <p class="note">Every figure on this page has a row in the data sheet (ppf-household-balance-sheet-data.csv) with its source, vintage, tier and the date it was checked, 18 October 2026.</p>
+  </section>
+</div>
+
+<div id="tip" hidden></div>
+
+<script>
+const D = {"fy": ["2022-23", "2023-24", "2024-25", "2025-26"], "flowNet": [5.3, 5.8, 7.1, 6.3], "flowLi": [6.1, 6.6, 4.9, 6.2], "flowFa": [11.4, 12.4, 12.0, 12.5], "peers": [{"label": "South Korea", "value": 88.6}, {"label": "Thailand", "value": 87.5}, {"label": "United States", "value": 68.1}, {"label": "China", "value": 58.0}, {"label": "India", "value": 47.8}, {"label": "Brazil", "value": 37.6}, {"label": "Indonesia", "value": 15.5}], "q": ["Jun 2022", "Sep 2022", "Dec 2022", "Mar 2023", "Jun 2023", "Sep 2023", "Dec 2023", "Mar 2024", "Jun 2024", "Sep 2024", "Dec 2024", "Mar 2025", "Jun 2025", "Sep 2025", "Dec 2025", "Mar 2026"], "A": [32894206.1, 33080388.3, 33934151.1, 33869902.8, 35634250.1, 37154705.4, 39403782.4, 41470111.9, 44131351.3, 46225285.3, 45714527.5, 45384875.6, 48008780.9, 48342514.1, 49815007.1, 49024188.6], "Ar": [134.3, 132.7, 133.0, 129.4, 132.9, 135.1, 139.4, 142.6, 148.2, 152.2, 146.9, 142.7, 148.2, 146.4, 147.6, 141.9], "L": [8911860.9, 9246740.6, 9700657.2, 10221696.3, 10543257.0, 11069222.0, 11579833.0, 12130649.0, 12418934.9, 12823274.1, 13242766.4, 13703686.2, 13988253.8, 14543839.1, 15133871.0, 15854556.3], "Lr": [36.4, 37.1, 38.0, 39.0, 39.3, 40.2, 41.0, 41.7, 41.7, 42.2, 42.6, 43.1, 43.2, 44.1, 44.9, 45.9], "bisLabels": ["Q2 2007", "Q3 2007", "Q4 2007", "Q1 2008", "Q2 2008", "Q3 2008", "Q4 2008", "Q1 2009", "Q2 2009", "Q3 2009", "Q4 2009", "Q1 2010", "Q2 2010", "Q3 2010", "Q4 2010", "Q1 2011", "Q2 2011", "Q3 2011", "Q4 2011", "Q1 2012", "Q2 2012", "Q3 2012", "Q4 2012", "Q1 2013", "Q2 2013", "Q3 2013", "Q4 2013", "Q1 2014", "Q2 2014", "Q3 2014", "Q4 2014", "Q1 2015", "Q2 2015", "Q3 2015", "Q4 2015", "Q1 2016", "Q2 2016", "Q3 2016", "Q4 2016", "Q1 2017", "Q2 2017", "Q3 2017", "Q4 2017", "Q1 2018", "Q2 2018", "Q3 2018", "Q4 2018", "Q1 2019", "Q2 2019", "Q3 2019", "Q4 2019", "Q1 2020", "Q2 2020", "Q3 2020", "Q4 2020", "Q1 2021", "Q2 2021", "Q3 2021", "Q4 2021", "Q1 2022", "Q2 2022", "Q3 2022", "Q4 2022", "Q1 2023", "Q2 2023", "Q3 2023", "Q4 2023", "Q1 2024", "Q2 2024", "Q3 2024", "Q4 2024", "Q1 2025", "Q2 2025", "Q3 2025", "Q4 2025"], "bis": [45.4, 46.2, 45.2, 45.3, 44.9, 44.1, 44.2, 43.2, 41.9, 41.7, 40.1, 39.1, 37.7, 38.5, 39.3, 38.9, 37.8, 37.2, 37.6, 37.3, 35.6, 36.3, 37.1, 36.5, 36.4, 36.2, 36.3, 35.9, 34.8, 35.1, 35.7, 35.2, 34.3, 35.1, 35.6, 34.5, 35.2, 33.1, 35.2, 33.2, 34.6, 34.3, 36.5, 35.2, 35.7, 35.8, 36.9, 36.3, 36.4, 37.3, 39.1, 38.1, 40.7, 42.5, 44.3, 42.7, 40.7, 39.8, 41.5, 41.3, 40.9, 41.8, 41.6, 42.4, 41.9, 43.3, 43.8, 44.1, 44.1, 43.9, 44.5, 44.8, 45.5, 45.5, 47.8], "comp": [{"label": "Bank deposits", "value": 16851927.4, "pct": 34.37471966644645}, {"label": "Direct equity", "value": 8856803.6, "pct": 18.066191104690716}, {"label": "Life insurance funds", "value": 7720549.1, "pct": 15.748448511802598}, {"label": "Mutual funds", "value": 5160145.5, "pct": 10.525713219045505}, {"label": "Currency", "value": 3862213.6, "pct": 7.878179548289352}, {"label": "Pension funds and PPF", "value": 2904097.8, "pct": 5.923805947499148}, {"label": "Small savings (excluding PPF)", "value": 2673814.2, "pct": 5.454071298999532}, {"label": "Other", "value": 994637.400000006, "pct": 2.028870703226705}], "totalA": 49024188.6};
+const NS = 'http://www.w3.org/2000/svg';
+function S(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function H(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+const f1 = v => v.toFixed(1);
+const f2 = v => v.toFixed(2);
+const minus = s => s.replace('-', '−');
+const sign1 = v => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(1);
+
+/* Tooltip */
+const tip = document.getElementById('tip');
+function showTip(x, y, title, rows) {
+  tip.textContent = '';
+  tip.appendChild(H('div', 'tip-title', title));
+  rows.forEach(r => {
+    const row = H('div', 'tip-row');
+    const key = H('span', 'tip-key');
+    if (r.color) key.style.borderTopColor = r.color;
+    row.appendChild(key);
+    row.appendChild(H('strong', 'tip-val', r.value));
+    row.appendChild(H('span', 'tip-name', r.name));
+    tip.appendChild(row);
+  });
+  tip.hidden = false;
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let left = x + 14, top = y - h - 10;
+  if (left + w > window.innerWidth - 8) left = x - w - 14;
+  if (left < 8) left = 8;
+  if (top < 8) top = y + 16;
+  tip.style.left = left + 'px';
+  tip.style.top = top + 'px';
+}
+function hideTip() { tip.hidden = true; }
+
+/* Table view */
+function tableView(host, head, rows, numCols) {
+  const d = H('details', 'data');
+  d.appendChild(H('summary', null, 'Show the data as a table'));
+  const wrap = H('div', 'table-scroll');
+  const t = H('table');
+  const tr0 = H('tr');
+  head.forEach((c, i) => tr0.appendChild(H('th', numCols.includes(i) ? 'num' : null, c)));
+  const thead = H('thead'); thead.appendChild(tr0); t.appendChild(thead);
+  const tb = H('tbody');
+  rows.forEach(r => {
+    const tr = H('tr');
+    r.forEach((c, i) => tr.appendChild(H('td', numCols.includes(i) ? 'num' : null, c)));
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb); wrap.appendChild(t); d.appendChild(wrap);
+  host.appendChild(d);
+}
+
+/* Legend */
+function legend(host, items) {
+  items.forEach(([t, c, sq]) => {
+    const it = H('span', 'item'); const k = H('i', sq ? 'sq' : null); k.style.setProperty('--c', c);
+    it.appendChild(k); it.appendChild(document.createTextNode(t)); host.appendChild(it);
+  });
+}
+
+/* Line chart. Series may be shorter than the label list. */
+function lineChart(host, cfg) {
+  const n = cfg.labels.length;
+  function draw() {
+    const old = host.querySelector('svg'); if (old) old.remove();
+    const W = Math.max(300, host.clientWidth), narrow = W < 520, Ht = narrow ? 240 : 290;
+    const m = { l: narrow ? 34 : 40, r: 46, t: 20, b: 26 };
+    const pw = W - m.l - m.r, ph = Ht - m.t - m.b;
+    const X = i => m.l + pw * i / (n - 1);
+    const Y = v => m.t + ph * (1 - (v - cfg.yMin) / (cfg.yMax - cfg.yMin));
+    const svg = S('svg', { width: W, height: Ht, viewBox: `0 0 ${W} ${Ht}`, role: 'img', 'aria-label': cfg.aria, tabindex: '0' });
+    host.appendChild(svg);
+    for (let v = cfg.yMin; v <= cfg.yMax + 1e-9; v += cfg.yStep) {
+      S('line', { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v), class: v === cfg.yMin ? 'axis' : 'grid' }, svg);
+      S('text', { x: m.l - 6, y: Y(v) + 4, 'text-anchor': 'end', class: 'tick' }, svg).textContent = String(Math.round(v * 10) / 10);
+    }
+    cfg.xTicks.forEach(i => {
+      S('text', { x: X(i), y: Ht - 8, 'text-anchor': 'middle', class: 'tick' }, svg).textContent = cfg.ticks[i];
+    });
+    cfg.series.forEach(s => {
+      const pts = s.values.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`);
+      if (cfg.series.length === 1) {
+        const a = S('path', { d: `M${X(0)},${Y(cfg.yMin)} L${pts.join(' L')} L${X(s.values.length - 1)},${Y(cfg.yMin)} Z`, opacity: '0.10' }, svg);
+        a.style.fill = s.color;
+      }
+      const p = S('path', { d: 'M' + pts.join(' L'), fill: 'none', 'stroke-width': '2', 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, svg);
+      p.style.stroke = s.color;
+    });
+    (cfg.marks || []).forEach(mk => {
+      const s = cfg.series[mk.s || 0], v = s.values[mk.i];
+      const c = S('circle', { cx: X(mk.i), cy: Y(v), r: 4, class: 'ring' }, svg); c.style.fill = s.color;
+      const anchor = mk.i < n * 0.08 ? 'start' : (mk.i > n * 0.92 ? 'end' : 'middle');
+      const dx = anchor === 'start' ? -2 : (anchor === 'end' ? 2 : 0);
+      S('text', { x: X(mk.i) + dx, y: mk.pos === 'below' ? Y(v) + 18 : Y(v) - 10, 'text-anchor': anchor, class: 'mlabel' }, svg).textContent = mk.text;
+    });
+    cfg.series.forEach(s => {
+      const li = s.values.length - 1, last = s.values[li];
+      const c = S('circle', { cx: X(li), cy: Y(last), r: 4, class: 'ring' }, svg); c.style.fill = s.color;
+      S('text', { x: X(li) + 9, y: Y(last) + 4, class: 'endlabel' }, svg).textContent = cfg.fmt(last);
+    });
+    const vline = S('line', { y1: m.t, y2: m.t + ph, class: 'cross', visibility: 'hidden' }, svg);
+    const hd = cfg.series.map(s => { const c = S('circle', { r: 5, class: 'ring', visibility: 'hidden' }, svg); c.style.fill = s.color; return c; });
+    let cur = -1;
+    function at(i) {
+      i = Math.max(0, Math.min(n - 1, i)); cur = i;
+      vline.setAttribute('x1', X(i)); vline.setAttribute('x2', X(i)); vline.setAttribute('visibility', 'visible');
+      const rows = []; let yy = null;
+      cfg.series.forEach((s, k) => {
+        if (i < s.values.length) {
+          hd[k].setAttribute('cx', X(i)); hd[k].setAttribute('cy', Y(s.values[i])); hd[k].setAttribute('visibility', 'visible');
+          rows.push({ color: s.color, name: s.name, value: cfg.fmt(s.values[i]) });
+          if (yy === null) yy = Y(s.values[i]);
+        } else hd[k].setAttribute('visibility', 'hidden');
+      });
+      const r = svg.getBoundingClientRect();
+      showTip(r.left + X(i), r.top + (yy === null ? m.t : yy), cfg.labels[i], rows);
+    }
+    function off() { vline.setAttribute('visibility', 'hidden'); hd.forEach(c => c.setAttribute('visibility', 'hidden')); hideTip(); cur = -1; }
+    const ov = S('rect', { x: m.l, y: m.t, width: pw, height: ph, fill: 'transparent' }, svg);
+    ov.style.touchAction = 'pan-y';
+    const move = e => { const r = svg.getBoundingClientRect(); at(Math.round((e.clientX - r.left - m.l) / pw * (n - 1))); };
+    ov.addEventListener('pointermove', move);
+    ov.addEventListener('pointerdown', move);
+    ov.addEventListener('pointerleave', off);
+    svg.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); at((cur < 0 ? n - 1 : cur) + (e.key === 'ArrowRight' ? 1 : -1)); }
+      else if (e.key === 'Escape') off();
+    });
+    svg.addEventListener('focus', () => at(n - 1));
+    svg.addEventListener('blur', off);
+  }
+  draw();
+  let lastW = host.clientWidth;
+  new ResizeObserver(() => { if (Math.abs(host.clientWidth - lastW) > 1) { lastW = host.clientWidth; draw(); } }).observe(host);
+}
+
+/* Bar rows */
+function bars(host, cfg) {
+  host.className = 'plot bars';
+  host.setAttribute('role', 'list');
+  cfg.items.forEach(it => {
+    const row = H('div', 'brow'); row.tabIndex = 0; row.setAttribute('role', 'listitem');
+    row.setAttribute('aria-label', it.label + ': ' + cfg.fmt(it.value));
+    row.appendChild(H('div', 'blabel', it.label));
+    const tr = H('div', 'btrack');
+    const bar = H('div', 'bar'); bar.style.width = Math.max(0.5, it.value / cfg.max * 74) + '%'; bar.style.background = it.color;
+    tr.appendChild(bar); tr.appendChild(H('span', 'bval', cfg.fmt(it.value)));
+    row.appendChild(tr);
+    const rows = [{ color: it.color, name: it.note || cfg.unit, value: cfg.fmt(it.value) }];
+    row.addEventListener('pointermove', e => showTip(e.clientX, e.clientY, it.label, rows));
+    row.addEventListener('pointerleave', hideTip);
+    row.addEventListener('focus', () => { const r = row.getBoundingClientRect(); showTip(r.left + r.width / 2, r.top, it.label, rows); });
+    row.addEventListener('blur', hideTip);
+    host.appendChild(row);
+  });
+}
+
+/* Paired bar rows: two bars per group */
+function pairs(host, cfg) {
+  host.className = 'plot bars';
+  host.setAttribute('role', 'list');
+  cfg.groups.forEach(g => {
+    const row = H('div', 'brow pair'); row.tabIndex = 0; row.setAttribute('role', 'listitem');
+    row.setAttribute('aria-label', `${g.label}: ${cfg.aName} ${cfg.fmt(g.a)}, ${cfg.bName} ${cfg.fmt(g.b)}`);
+    row.appendChild(H('div', 'blabel', g.label));
+    const tracks = H('div', 'btracks');
+    [[g.a, cfg.aColor], [g.b, cfg.bColor]].forEach(([v, c]) => {
+      const tr = H('div', 'btrack');
+      const bar = H('div', 'bar'); bar.style.width = Math.max(0.5, v / cfg.max * 74) + '%'; bar.style.background = c;
+      tr.appendChild(bar); tr.appendChild(H('span', 'bval', cfg.fmt(v)));
+      tracks.appendChild(tr);
+    });
+    row.appendChild(tracks);
+    const rows = [{ color: cfg.aColor, name: cfg.aName, value: cfg.fmt(g.a) }, { color: cfg.bColor, name: cfg.bName, value: cfg.fmt(g.b) }];
+    row.addEventListener('pointermove', e => showTip(e.clientX, e.clientY, g.label, rows));
+    row.addEventListener('pointerleave', hideTip);
+    row.addEventListener('focus', () => { const r = row.getBoundingClientRect(); showTip(r.left + r.width / 2, r.top, g.label, rows); });
+    row.addEventListener('blur', hideTip);
+    host.appendChild(row);
+  });
+}
+
+/* Sparkline */
+function spark(host, vals, color) {
+  const w = 88, h = 26, p = 4;
+  const mn = Math.min(...vals), mx = Math.max(...vals), rng = (mx - mn) || 1;
+  const X = i => p + (w - 2 * p) * (vals.length === 1 ? 0.5 : i / (vals.length - 1));
+  const Y = v => h - p - (h - 2 * p) * (v - mn) / rng;
+  const svg = S('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}`, 'aria-hidden': 'true' }, host);
+  const path = S('path', { d: 'M' + vals.map((v, i) => X(i).toFixed(1) + ',' + Y(v).toFixed(1)).join(' L'), fill: 'none', 'stroke-width': '2', 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, svg);
+  path.style.stroke = color;
+  const c = S('circle', { cx: X(vals.length - 1), cy: Y(vals[vals.length - 1]), r: 3.5, class: 'ring' }, svg);
+  c.style.fill = color;
+}
+
+/* Data prep */
+const q = D.q;
+const short = q.map(s => s.replace(' 20', " '"));
+const per100 = D.L.map((l, i) => Math.round(l / D.A[i] * 1000) / 10);
+const net = D.Ar.map((a, i) => Math.round((a - D.Lr[i]) * 10) / 10);
+const gdp = D.L.map((l, i) => l / D.Lr[i]);
+const n = q.length;
+const debtC = 'var(--debt)', assetsC = 'var(--assets)', netC = 'var(--net)', gdpC = 'var(--gdp)', bisC = 'var(--bis)';
+const el = id => document.getElementById(id);
+const qIdx = lab => D.bisLabels.indexOf(lab);
+const bisFrom2022 = D.bis.slice(qIdx('Q2 2022'));
+
+/* 1 Debt % GDP */
+lineChart(el('p1'), {
+  labels: q, ticks: short, xTicks: [0, 4, 8, 12, 15], yMin: 30, yMax: 50, yStep: 5, fmt: v => f1(v) + '%',
+  series: [{ name: 'Household financial liabilities, % of GDP', color: debtC, values: D.Lr }],
+  marks: [{ i: 0, text: '36.4%', pos: 'above' }],
+  aria: 'Line chart: household financial liabilities rose from 36.4% of GDP in June 2022 to 45.9% in March 2026.'
+});
+tableView(el('t1'), ['Quarter', '% of GDP', '₹ crore'], q.map((p, i) => [p, f1(D.Lr[i]), D.L[i].toLocaleString('en-IN', { maximumFractionDigits: 1 })]), [1, 2]);
+
+/* 2 Indexed lines */
+(function () {
+  const iL = D.L.map(v => v / D.L[0] * 100), iA = D.A.map(v => v / D.A[0] * 100), iG = gdp.map(v => v / gdp[0] * 100);
+  legend(el('l2'), [['Household financial liabilities', debtC], ['Household financial assets', assetsC], ['Nominal GDP (implied)', gdpC]]);
+  lineChart(el('p2'), {
+    labels: q, ticks: short, xTicks: [0, 4, 8, 12, 15], yMin: 100, yMax: 180, yStep: 20, fmt: v => f1(v),
+    series: [{ name: 'Liabilities', color: debtC, values: iL }, { name: 'Financial assets', color: assetsC, values: iA }, { name: 'Nominal GDP', color: gdpC, values: iG }],
+    aria: 'Line chart indexed to June 2022 = 100: household liabilities reach 177.9, financial assets 149.0 and nominal GDP 141.1 by March 2026.'
+  });
+  tableView(el('t2'), ['Quarter', 'Liabilities', 'Financial assets', 'Nominal GDP'], q.map((p, i) => [p, f1(iL[i]), f1(iA[i]), f1(iG[i])]), [1, 2, 3]);
+})();
+
+/* 3 RBI vs BIS */
+(function () {
+  legend(el('l3'), [['RBI measure, household financial liabilities', debtC], ['BIS measure, credit to households', bisC]]);
+  lineChart(el('p3'), {
+    labels: q, ticks: short, xTicks: [0, 4, 8, 12, 15], yMin: 30, yMax: 50, yStep: 5, fmt: v => f1(v) + '%',
+    series: [{ name: 'RBI measure', color: debtC, values: D.Lr }, { name: 'BIS measure', color: bisC, values: bisFrom2022 }],
+    aria: 'Line chart: the RBI measure rises from 36.4% to 45.9% of GDP and the BIS measure from 40.9% to 47.8%.'
+  });
+  tableView(el('t3'), ['Quarter', 'RBI measure, % of GDP', 'BIS measure, % of GDP'], q.map((p, i) => [p, f1(D.Lr[i]), i < bisFrom2022.length ? f1(bisFrom2022[i]) : 'not yet published']), [1, 2]);
+})();
+
+/* 4 BIS long run */
+(function () {
+  const yrs = [2008, 2012, 2016, 2020, 2024];
+  const ticksIdx = yrs.map(y => qIdx('Q1 ' + y));
+  const tk = {}; ticksIdx.forEach((i, k) => tk[i] = String(yrs[k]));
+  lineChart(el('p4'), {
+    labels: D.bisLabels, ticks: tk, xTicks: ticksIdx, yMin: 30, yMax: 50, yStep: 5, fmt: v => f1(v) + '%',
+    series: [{ name: 'Credit to households, % of GDP (BIS)', color: debtC, values: D.bis }],
+    marks: [{ i: qIdx('Q3 2007'), text: '46.2% Q3 2007', pos: 'above' }, { i: qIdx('Q3 2016'), text: '33.1% Q3 2016', pos: 'below' }, { i: qIdx('Q4 2020'), text: '44.3% Q4 2020', pos: 'above' }],
+    aria: 'Line chart: BIS credit to households, 45% to 46% of GDP in 2007, 33.1% in 2016, 44.3% in late 2020 and 47.8% in late 2025.'
+  });
+  tableView(el('t4'), ['Quarter', '% of GDP'], D.bisLabels.map((p, i) => [p, f1(D.bis[i])]), [1]);
+})();
+
+/* 5 Peers */
+(function () {
+  const items = D.peers.map(p => ({ label: p.label, value: p.value, color: p.label === 'India' ? debtC : gdpC, note: 'Q4 2025, % of GDP' }));
+  bars(el('p5'), { items, max: 100, fmt: v => f1(v) + '%', unit: '% of GDP' });
+  tableView(el('t5'), ['Country', '% of GDP, Q4 2025'], items.map(i => [i.label, f1(i.value)]), [1]);
+})();
+
+/* 6 Debt per 100 */
+lineChart(el('p6'), {
+  labels: q, ticks: short, xTicks: [0, 4, 8, 12, 15], yMin: 24, yMax: 34, yStep: 2, fmt: v => '₹' + f1(v),
+  series: [{ name: 'Debt per ₹100 of financial assets', color: debtC, values: per100 }],
+  marks: [{ i: 0, text: '₹27.1', pos: 'above' }],
+  aria: 'Line chart: household debt per 100 rupees of financial assets rose from 27.1 in June 2022 to 32.3 in March 2026, the highest in the series.'
+});
+tableView(el('t6'), ['Quarter', 'Debt per ₹100 of assets'], q.map((p, i) => [p, f1(per100[i])]), [1]);
+
+/* 7 Assets and net */
+(function () {
+  legend(el('l7'), [['Financial assets, % of GDP', assetsC], ['Net financial assets, % of GDP', netC]]);
+  lineChart(el('p7'), {
+    labels: q, ticks: short, xTicks: [0, 4, 8, 12, 15], yMin: 80, yMax: 160, yStep: 20, fmt: v => f1(v) + '%',
+    series: [{ name: 'Financial assets', color: assetsC, values: D.Ar }, { name: 'Net financial assets', color: netC, values: net }],
+    marks: [{ s: 0, i: 9, text: '152.2% Sep 2024', pos: 'above' }, { s: 1, i: 9, text: '110.0%', pos: 'above' }],
+    aria: 'Line chart: household financial assets peaked at 152.2% of GDP in September 2024 and were 141.9% in March 2026; net financial assets were 96.0%.'
+  });
+  tableView(el('t7'), ['Quarter', 'Financial assets, % of GDP', 'Financial liabilities, % of GDP', 'Net, % of GDP'], q.map((p, i) => [p, f1(D.Ar[i]), f1(D.Lr[i]), f1(net[i])]), [1, 2, 3]);
+})();
+
+/* 8 Composition of assets */
+(function () {
+  const items = D.comp.map(c => ({ label: c.label, value: c.pct, color: assetsC, note: '₹' + (c.value / 1e5).toFixed(1) + ' lakh crore' }));
+  bars(el('p8'), { items, max: 40, fmt: v => f1(v) + '%', unit: 'share of financial assets' });
+  tableView(el('t8'), ['Instrument', '₹ lakh crore', '% of financial assets'], D.comp.map(c => [c.label, (c.value / 1e5).toFixed(1), f1(c.pct)]), [1, 2]);
+})();
+
+/* 9 Savings against borrowing, annual flows */
+(function () {
+  legend(el('l9'), [['Net financial savings, % of GDP', netC, true], ['New borrowing, % of GDP', debtC, true]]);
+  const groups = D.fy.map((y, i) => ({ label: y + (y === '2025-26' ? ' (preliminary)' : ''), a: D.flowNet[i], b: D.flowLi[i] }));
+  pairs(el('p9'), { groups, aName: 'Net financial savings', bName: 'New borrowing', aColor: netC, bColor: debtC, max: 8, fmt: v => f1(v) + '%' });
+  tableView(el('t9'), ['Year', 'Net financial savings, % of GDP', 'New borrowing, % of GDP', 'Gross financial assets added, % of GDP'], D.fy.map((y, i) => [y, f1(D.flowNet[i]), f1(D.flowLi[i]), f1(D.flowFa[i])]), [1, 2, 3]);
+})();
+
+/* 10 Loan type share */
+(function () {
+  const items = [
+    { label: '2019-20 (about)', value: 50, color: debtC, note: 'Non-housing retail share, approximate' },
+    { label: 'March 2025', value: 54.9, color: debtC, note: 'Non-housing retail share' },
+    { label: 'March 2026', value: 58.4, color: debtC, note: 'Non-housing retail share' }
+  ];
+  bars(el('p10'), { items, max: 70, fmt: v => (v === 50 ? 'about 50%' : f1(v) + '%'), unit: 'share of household debt' });
+  tableView(el('t10'), ['Date', 'Non-housing retail loans, % of household debt'], items.map(i => [i.label, i.value === 50 ? 'about 50' : f1(i.value)]), [1]);
+})();
+
+/* 11 Gold loans */
+const goldItems = [
+  { label: 'March 2019', value: 0.24671, note: '₹24,671 crore' },
+  { label: 'March 2024', value: 0.93301, note: '₹93,301 crore' },
+  { label: 'September 2025', value: 3.16, note: '₹3.16 lakh crore' },
+  { label: 'March 2026', value: 4.61, note: '₹4.61 lakh crore' },
+  { label: 'April 2026', value: 4.89, note: '₹4.89 lakh crore' }
+].map(i => ({ ...i, color: debtC }));
+bars(el('p11'), { items: goldItems, max: 6, fmt: v => '₹' + f2(v), unit: 'lakh crore' });
+tableView(el('t11'), ['Date', 'Bank gold loans, ₹ lakh crore'], goldItems.map(i => [i.label, f2(i.value)]), [1]);
+
+/* 12 Delinquency */
+(function () {
+  const items = [
+    { label: 'Fintech lenders', value: 6.4, color: debtC, note: 'Delinquency, loans below ₹50,000' },
+    { label: 'NBFCs', value: 5.7, color: gdpC, note: 'Delinquency, loans below ₹50,000' },
+    { label: 'Banks', value: 4.1, color: gdpC, note: 'Delinquency, loans below ₹50,000' }
+  ];
+  bars(el('p12'), { items, max: 8, fmt: v => f1(v) + '%', unit: '%' });
+  tableView(el('t12'), ['Lender type', 'Delinquency, personal loans below ₹50,000, %'], items.map(i => [i.label, f1(i.value)]), [1]);
+})();
+
+/* Indicator panel */
+(function () {
+  const L = D.Lr, last = a => a[a.length - 1];
+  const bisYoy = last(D.bis) - D.bis[D.bis.length - 5];
+  const rows = [
+    { name: 'Household debt, RBI measure', latest: f1(last(L)) + '% of GDP', date: 'March 2026', chg: sign1(last(L) - L[n - 5]) + ' pts over 12 months', series: L, color: debtC, peer: '—', tier: ['primary', 'Primary'], chart: 'Chart 1' },
+    { name: 'Household credit, BIS measure', latest: f1(last(D.bis)) + '% of GDP', date: 'Q4 2025', chg: sign1(bisYoy) + ' pts over 12 months', series: D.bis.slice(-16), color: bisC, peer: '5th of 7. Peers range from 15.5% to 88.6%.', tier: ['primary', 'Primary'], chart: 'Charts 3 to 5' },
+    { name: 'Debt per ₹100 of financial assets', latest: '₹' + f1(last(per100)), date: 'March 2026', chg: sign1(last(per100) - per100[n - 5]).replace(/^(.)/, '$1₹') + ' over 12 months', series: per100, color: debtC, peer: '—', tier: ['derived', 'Calculated'], chart: 'Chart 6' },
+    { name: 'Net financial assets', latest: f1(last(net)) + '% of GDP', date: 'March 2026', chg: sign1(last(net) - net[n - 5]) + ' pts over 12 months', series: net, color: netC, peer: '—', tier: ['derived', 'Calculated'], chart: 'Chart 7' },
+    { name: 'Net financial savings, annual flow', latest: f1(last(D.flowNet)) + '% of GDP', date: '2025-26, preliminary', chg: sign1(last(D.flowNet) - D.flowNet[2]) + ' pts on 2024-25', series: D.flowNet, color: netC, peer: '—', tier: ['primary', 'Primary'], chart: 'Chart 9' },
+    { name: 'New borrowing, annual flow', latest: f1(last(D.flowLi)) + '% of GDP', date: '2025-26, preliminary', chg: sign1(last(D.flowLi) - D.flowLi[2]) + ' pts on 2024-25', series: D.flowLi, color: debtC, peer: '—', tier: ['primary', 'Primary'], chart: 'Chart 9' },
+    { name: 'Non-housing retail share of household debt', latest: '58.4%', date: 'March 2026', chg: sign1(58.4 - 54.9) + ' pts over 12 months', series: [50, 54.9, 58.4], color: debtC, peer: '—', tier: ['second', 'Press report'], chart: 'Chart 10' },
+    { name: 'Bank gold loans', latest: '₹4.89 lakh crore', date: 'April 2026', chg: '+' + Math.round((4.89 / 3.16 - 1) * 100) + '% since September 2025', series: goldItems.map(i => i.value), color: debtC, peer: '—', tier: ['second', 'Press report'], chart: 'Chart 11' },
+    { name: 'Fintech delinquency, personal loans below ₹50,000', latest: '6.4%', date: 'March 2026', chg: 'Banks 4.1%, NBFCs 5.7% at the same date. No verified earlier figure.', series: null, color: debtC, peer: '—', tier: ['second', 'Press report'], chart: 'Chart 12' },
+    { name: 'Household debt-service ratio', latest: 'To source', date: '', chg: '—', series: null, color: debtC, peer: '—', tier: ['todo', 'To source'], chart: '—' }
+  ];
+  const tb = document.querySelector('#panel-t tbody');
+  rows.forEach(r => {
+    const tr = H('tr');
+    tr.appendChild(H('td', 'ind', r.name));
+    const tl = H('td', 'latest'); tl.appendChild(H('strong', null, r.latest)); if (r.date) tl.appendChild(H('small', null, r.date)); tr.appendChild(tl);
+    tr.appendChild(H('td', 'chg', r.chg));
+    const ts = H('td', 'spark'); if (r.series) spark(ts, r.series, r.color); else ts.textContent = '—'; tr.appendChild(ts);
+    tr.appendChild(H('td', 'peer', r.peer));
+    const tt = H('td'); const chip = H('span', 'tier ' + r.tier[0], r.tier[1]); tt.appendChild(chip);
+    if (r.chart !== '—') { const sm = H('small', null, ' ' + r.chart); sm.style.color = 'var(--ink2)'; tt.appendChild(sm); }
+    tr.appendChild(tt);
+    tb.appendChild(tr);
+  });
+})();
+</script>
