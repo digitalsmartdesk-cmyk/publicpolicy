@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0A3D62;--green:#2E7D32;--gold:#C9A227;--grey:#EBE8E8;--bg:#FFFFFF;--surface:#F7F6F3;--ink:#12202B;--muted:#52606D;--rule:#DDD9CF}
+@media (prefers-color-scheme:dark){:root{--bg:#0D1B26;--surface:#142635;--ink:#EDEFF2;--muted:#9FB0BD;--rule:#22384A}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Montserrat',sans-serif}
+a{color:var(--navy);text-decoration:none}
+a:hover{color:var(--gold)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:var(--bg);color:var(--ink)">
+<header style="position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--rule)">
+  <div style="max-width:1120px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+    <a href="/" style="display:flex;align-items:center;gap:10px;min-height:44px">
+      <img src="assets/ppf-logo.png" alt="Public Policy Foundation" style="height:36px;width:auto;display:block">
+      <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:16px;color:var(--ink)">Public Policy Foundation</span>
+    </a>
+    <nav style="display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;font-size:13.5px;font-weight:600">
+      <a href="/research/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;background:var(--navy);color:#fff">Research</a>
+      <a href="/data-and-tools/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">Data &amp; Tools</a>
+      <a href="/services/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">Services</a>
+      <a href="/about/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">About &amp; Method</a>
+      <a href="/contact/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main style="max-width:1120px;margin:0 auto;padding:0 24px">
+
+  <section style="padding:48px 0 28px;max-width:46em">
+    <div style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green)">Research</div>
+    <h1 style="margin:14px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(28px,4vw,40px);line-height:1.1">Our publications and tools</h1>
+    <p style="margin:16px 0 0;font-size:15.5px;line-height:1.7;color:var(--muted)">Filter by format or research area.</p>
+  </section>
+
+  <section style="padding-bottom:8px;display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button onClick="{{ setType_all }}" style="{{ typeAllStyle }}">All formats</button>
+      <button onClick="{{ setType_book }}" style="{{ typeBookStyle }}">Books</button>
+      <button onClick="{{ setType_tool }}" style="{{ typeToolStyle }}">Tools</button>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button onClick="{{ setTheme_all }}" style="{{ themeAllStyle }}">All themes</button>
+      <button onClick="{{ setTheme_econ }}" style="{{ themeEconStyle }}">Economic Development</button>
+      <button onClick="{{ setTheme_social }}" style="{{ themeSocialStyle }}">Social Development</button>
+    </div>
+  </section>
+
+  <section style="padding:24px 0 56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px">
+    <sc-for list="{{ items }}" as="it" hint-placeholder-count="5">
+      <a href="{{ it.href }}" style="display:flex;flex-direction:column;gap:8px;background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:20px;min-width:0">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)">{{ it.kind }}</div>
+        <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:18px;color:var(--ink)">{{ it.title }}</div>
+        <p style="margin:0;font-size:13.5px;color:var(--muted);line-height:1.55">{{ it.blurb }}</p>
+        <div style="margin-top:4px;font-size:12px;color:var(--muted)">{{ it.themeLabel }}</div>
+      </a>
+    </sc-for>
+  </section>
+
+</main>
+
+<footer style="background:var(--navy);color:#fff;padding:32px 24px;text-align:center;font-size:12.5px">
+  <div style="max-width:1120px;margin:0 auto;color:#9FB0BD">Public Policy Foundation &middot; Independent; not a registered entity. <a href="/about/" style="color:var(--gold)">Method</a> &middot; <a href="/contact/" style="color:var(--gold)">Contact</a></div>
+</footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const ITEMS = [
+  { title: 'Rich Country, Poor Citizens', kind: 'Book', type: 'book', themes: ['econ','social'], themeLabel: 'Economic & social development', blurb: "43 chapters, 353 charts. India's unfinished growth, 2004–2036.", href: 'Rich Country, Poor Citizens.dc.html' },
+  { title: "India's Cities", kind: 'Book', type: 'book', themes: ['econ','social'], themeLabel: 'Economic & social development', blurb: '35 chapters, 103 charts, 20 cities. Urban governance and funding.', href: "India's Cities - Buy.dc.html" },
+  { title: 'The Household Balance Sheet', kind: 'Book', type: 'book', themes: ['econ'], themeLabel: 'Economic development', blurb: 'What Indian families own, owe and earn. 15 chapters, updated quarterly.', href: 'The Household Balance Sheet - Buy.dc.html' },
+  { title: 'The AI Squeeze', kind: 'Book', type: 'book', themes: ['econ'], themeLabel: 'Economic development', blurb: "16 chapters on entry-level tech careers.", href: 'The AI Squeeze - Buy.dc.html' },
+  { title: 'Money and Seats', kind: 'Book', type: 'book', themes: ['econ','social'], themeLabel: 'Economic & social development', blurb: '13 chapters on tax and parliamentary allocation formulas.', href: 'Money and Seats - Buy.dc.html' },
+  { title: 'Household Balance Sheet Tracker', kind: 'Tool', type: 'tool', themes: ['econ'], themeLabel: 'Economic development', blurb: 'Nine indicators of household debt, updated each quarter.', href: 'Household Balance Sheet Tracker.html' },
+  { title: 'Seat-Allocation Calculator', kind: 'Tool', type: 'tool', themes: ['social'], themeLabel: 'Social development', blurb: 'Set a House size and a rule; see every state\u2019s seats.', href: 'Money and Seats.dc.html#ch-12' }
+];
+class Component extends DCLogic {
+  state = { type: 'all', theme: 'all' };
+  btnStyle(active) {
+    return active
+      ? 'min-height:40px;padding:0 14px;border-radius:999px;border:1.5px solid var(--navy);background:var(--navy);color:#fff;font-weight:700;font-size:13px;cursor:pointer'
+      : 'min-height:40px;padding:0 14px;border-radius:999px;border:1.5px solid var(--rule);background:transparent;color:var(--ink);font-weight:600;font-size:13px;cursor:pointer';
+  }
+  renderVals() {
+    const { type, theme } = this.state;
+    const items = ITEMS.filter(i => (type === 'all' || i.type === type) && (theme === 'all' || i.themes.includes(theme)));
+    return {
+      items,
+      typeAllStyle: this.btnStyle(type === 'all'), typeBookStyle: this.btnStyle(type === 'book'), typeToolStyle: this.btnStyle(type === 'tool'),
+      themeAllStyle: this.btnStyle(theme === 'all'), themeEconStyle: this.btnStyle(theme === 'econ'), themeSocialStyle: this.btnStyle(theme === 'social'),
+      setType_all: () => this.setState({ type: 'all' }), setType_book: () => this.setState({ type: 'book' }), setType_tool: () => this.setState({ type: 'tool' }),
+      setTheme_all: () => this.setState({ theme: 'all' }), setTheme_econ: () => this.setState({ theme: 'econ' }), setTheme_social: () => this.setState({ theme: 'social' })
+    };
+  }
+}
+</script>
+</body>
+</html>

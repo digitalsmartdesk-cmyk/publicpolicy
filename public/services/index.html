@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0A3D62;--green:#2E7D32;--gold:#C9A227;--grey:#EBE8E8;--bg:#FFFFFF;--surface:#F7F6F3;--ink:#12202B;--muted:#52606D;--rule:#DDD9CF}
+@media (prefers-color-scheme:dark){:root{--bg:#0D1B26;--surface:#142635;--ink:#EDEFF2;--muted:#9FB0BD;--rule:#22384A}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Montserrat',sans-serif}
+a{color:var(--navy);text-decoration:none}
+a:hover{color:var(--gold)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:var(--bg);color:var(--ink)">
+<header style="position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--rule)">
+  <div style="max-width:1120px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+    <a href="/" style="display:flex;align-items:center;gap:10px;min-height:44px">
+      <img src="assets/ppf-logo.png" alt="Public Policy Foundation" style="height:36px;width:auto;display:block">
+      <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:16px;color:var(--ink)">Public Policy Foundation</span>
+    </a>
+    <nav style="display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;font-size:13.5px;font-weight:600">
+      <a href="/research/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">Research</a>
+      <a href="/data-and-tools/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">Data &amp; Tools</a>
+      <a href="/services/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;background:var(--navy);color:#fff">Services</a>
+      <a href="/about/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">About &amp; Method</a>
+      <a href="/contact/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main style="max-width:1120px;margin:0 auto;padding:0 24px">
+
+  <section style="padding:48px 0 32px;max-width:46em">
+    <div style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green)">Services</div>
+    <h1 style="margin:14px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(28px,4vw,42px);line-height:1.1">Independent research, put to work for your organisation</h1>
+    <p style="margin:18px 0 0;font-size:16px;line-height:1.7;color:var(--muted)">We take commissions from consultancies, banks, ratings agencies, developers, government teams and newsrooms. Clients choose the question; we do not change the answer to fit it. Retainers and workshops are not offered &mdash; every engagement below is a defined deliverable with a fixed scope.</p>
+  </section>
+
+  <!-- CITY BRIEFING -->
+  <section id="briefing" style="padding:28px 0;border-top:1px solid var(--rule);display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:start">
+    <div style="min-width:0">
+      <div style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:7px;background:var(--navy);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:800;font-size:14px">1</span><h2 style="margin:0;font-family:'Playfair Display',serif;font-weight:800;font-size:24px">City briefing</h2></div>
+      <p style="margin:14px 0 0;font-size:15px;line-height:1.7;color:var(--muted)">A focused 15&ndash;25 page briefing on one city, built from the same sourcing standard as <i>India's Cities</i>: governance, finance, infrastructure and services, each figure dated and sourced. Delivered as a PDF in three weeks.</p>
+      <div style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:10px">
+        <div style="background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:16px"><div style="font-family:'Playfair Display',serif;font-weight:800;font-size:22px">Rs 1,50,000</div><div style="font-size:12.5px;color:var(--muted);margin-top:4px">One city</div></div>
+        <div style="background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:16px"><div style="font-family:'Playfair Display',serif;font-weight:800;font-size:22px">Rs 2,50,000</div><div style="font-size:12.5px;color:var(--muted);margin-top:4px">Two cities</div></div>
+        <div style="background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:16px"><div style="font-family:'Playfair Display',serif;font-weight:800;font-size:22px">3 weeks</div><div style="font-size:12.5px;color:var(--muted);margin-top:4px">Delivery</div></div>
+      </div>
+      <div style="margin-top:20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+        <label for="city-select" style="font-size:13.5px;font-weight:600">Choose a city:</label>
+        <select id="city-select" value="{{ city }}" onChange="{{ onCityChange }}" style="min-height:44px;padding:0 12px;border-radius:9px;border:1.5px solid var(--rule);background:var(--bg);color:var(--ink);font-family:inherit;font-size:14px">
+          <option value="Mumbai">Mumbai</option><option value="Delhi">Delhi</option><option value="Bengaluru">Bengaluru</option><option value="Hyderabad">Hyderabad</option><option value="Ahmedabad">Ahmedabad</option><option value="Chennai">Chennai</option><option value="Kolkata">Kolkata</option><option value="Surat">Surat</option><option value="Pune">Pune</option><option value="Jaipur">Jaipur</option><option value="Indore">Indore</option>
+        </select>
+        <a href="#enquiry" style="display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:9px;background:var(--navy);color:#fff;font-weight:700;font-size:13.5px">Request a briefing on {{ city }} &rarr;</a>
+      </div>
+      <p style="margin:10px 0 0;font-size:12px;color:var(--muted)">Shown: 11 of the 20 cities covered in <i>India's Cities</i>. Full coverage list in Chapter 24.</p>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:22px;min-width:0">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)">Sample page &middot; Indore</div>
+      <h3 style="margin:8px 0 0;font-family:'Playfair Display',serif;font-weight:700;font-size:18px">What the national tables say</h3>
+      <p style="margin:10px 0 0;font-size:13.5px;line-height:1.65;color:var(--ink)">In 2020 the Ministry of Housing and Urban Affairs published two indexes of Indian cities. Indore was first among 49 million-plus cities on the Municipal Performance Index, with a score of 66.08. On the Ease of Living Index, scored from the resident's side, Indore ranked ninth with 58.58; Bengaluru was first with 66.7.</p>
+      <div style="margin-top:14px;display:grid;gap:8px">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule)"><span>Municipal Performance Index 2020</span><b>1st of 49 (66.08)</b></div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule)"><span>Ease of Living Index 2020</span><b>9th (58.58)</b></div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;font-size:13px;padding:8px 0"><span>Road deaths, 2022 &rarr; 2023</span><b>639 &rarr; 257</b></div>
+      </div>
+      <p style="margin:12px 0 0;font-size:11px;color:var(--muted)">Source: Ministry of Housing and Urban Affairs, 2020 indexes. Full briefing adds finance, water, waste and a sources table.</p>
+    </div>
+  </section>
+
+  <!-- DATASET LICENCE -->
+  <section style="padding:40px 0 28px;border-top:1px solid var(--rule);display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:start">
+    <div style="min-width:0">
+      <div style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:7px;background:var(--navy);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:800;font-size:14px">2</span><h2 style="margin:0;font-family:'Playfair Display',serif;font-weight:800;font-size:24px">Dataset licence</h2></div>
+      <p style="margin:14px 0 0;font-size:15px;line-height:1.7;color:var(--muted)">The Household Balance Sheet tracker, licensed as a spreadsheet: every indicator, tier-tagged by source reliability, updated within weeks of each RBI and BIS release. For internal use across your organisation.</p>
+      <div style="margin-top:18px;background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:18px;max-width:22em">
+        <div style="font-family:'Playfair Display',serif;font-weight:800;font-size:26px">Rs 40,000<span style="font-size:14px;font-weight:600;color:var(--muted)">/year per organisation</span></div>
+        <p style="margin:8px 0 14px;font-size:13px;color:var(--muted)">Spreadsheet licence, quarterly updates, one named administrator.</p>
+        <a href="#enquiry" style="display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:9px;background:var(--navy);color:#fff;font-weight:700;font-size:13.5px">License this dataset &rarr;</a>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:22px;min-width:0">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)">Free preview &middot; latest quarter</div>
+      <h3 style="margin:8px 0 14px;font-family:'Playfair Display',serif;font-weight:700;font-size:18px">March 2026</h3>
+      <div style="display:grid;gap:8px">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule)"><span>Household financial liabilities</span><b>45.9% of GDP</b></div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;font-size:13px;padding:8px 0;border-bottom:1px solid var(--rule)"><span>Debt per Rs 100 of financial assets</span><b>Rs 32.3</b></div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;font-size:13px;padding:8px 0"><span>Net financial assets</span><b>96% of GDP</b></div>
+      </div>
+      <p style="margin:12px 0 0;font-size:11px;color:var(--muted)">Source: RBI Bulletin, September 2026 edition, Table 52(b). Licensed version adds nine more indicators, BIS peer data and the full quarterly series since June 2022.</p>
+    </div>
+  </section>
+
+  <!-- CUSTOM STUDY -->
+  <section style="padding:40px 0 48px;border-top:1px solid var(--rule)">
+    <div style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:7px;background:var(--navy);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:800;font-size:14px">3</span><h2 style="margin:0;font-family:'Playfair Display',serif;font-weight:800;font-size:24px">Custom study</h2></div>
+    <p style="margin:14px 0 0;font-size:15px;line-height:1.7;color:var(--muted);max-width:46em">A study scoped to one question of yours &mdash; a sector, a state, a regulatory filing, a due-diligence brief &mdash; researched and sourced to the same standard as our books. We agree the question, the sources and the timeline before work begins; we do not agree the conclusion in advance.</p>
+    <div style="margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px">
+      <div style="background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:18px"><div style="font-family:'Playfair Display',serif;font-weight:800;font-size:22px">From Rs 5,00,000</div><p style="margin:8px 0 0;font-size:13px;color:var(--muted)">Scoped per project; priced after an initial call on your question and sources.</p></div>
+      <div style="background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:18px"><div style="font-family:'Playfair Display',serif;font-weight:700;font-size:16px">What it can cover</div><p style="margin:8px 0 0;font-size:13px;color:var(--muted);line-height:1.6">A sector deep-dive, a state or city comparison, a bespoke cut of our data, or due-diligence research on a public claim.</p></div>
+      <div style="background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:18px"><div style="font-family:'Playfair Display',serif;font-weight:700;font-size:16px">What it does not cover</div><p style="margin:8px 0 0;font-size:13px;color:var(--muted);line-height:1.6">Retainers, advocacy, or a predetermined finding. We are not a lobbying or PR service.</p></div>
+    </div>
+  </section>
+
+  <!-- ENQUIRY -->
+  <section id="enquiry" style="padding:8px 0 56px;border-top:1px solid var(--rule)">
+    <div style="margin-top:32px;background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:clamp(22px,3vw,34px)">
+      <h2 style="margin:0 0 8px;font-family:'Playfair Display',serif;font-weight:800;font-size:24px">Tell us what you need</h2>
+      <p style="margin:0 0 20px;font-size:14px;color:var(--muted)">This opens your email client addressed to us. Prefer to write directly? <a href="mailto:[hello@publicpolicyfoundation.in]">[hello@publicpolicyfoundation.in]</a></p>
+      <form action="mailto:[hello@publicpolicyfoundation.in]" method="post" enctype="text/plain" style="display:grid;gap:14px;max-width:40em">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px">Name</label><input name="Name" required="" style="width:100%;min-height:46px;padding:0 14px;border-radius:9px;border:1.5px solid var(--rule);background:var(--bg);color:var(--ink);font-family:inherit"></div>
+          <div><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px">Organisation</label><input name="Organisation" style="width:100%;min-height:46px;padding:0 14px;border-radius:9px;border:1.5px solid var(--rule);background:var(--bg);color:var(--ink);font-family:inherit"></div>
+        </div>
+        <div><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px">Email</label><input name="Email" type="email" required="" style="width:100%;min-height:46px;padding:0 14px;border-radius:9px;border:1.5px solid var(--rule);background:var(--bg);color:var(--ink);font-family:inherit"></div>
+        <div><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px">What are you looking for?</label>
+          <select name="Interest" style="width:100%;min-height:46px;padding:0 14px;border-radius:9px;border:1.5px solid var(--rule);background:var(--bg);color:var(--ink);font-family:inherit">
+            <option>City briefing</option><option>Dataset licence</option><option>Custom study</option><option>Other</option>
+          </select>
+        </div>
+        <div><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px">Message</label><textarea name="Message" rows="4" style="width:100%;padding:12px 14px;border-radius:9px;border:1.5px solid var(--rule);background:var(--bg);color:var(--ink);font-family:inherit;resize:vertical"></textarea></div>
+        <button type="submit" style="justify-self:start;min-height:48px;padding:0 24px;border-radius:10px;border:none;background:var(--navy);color:#fff;font-weight:700;font-size:14.5px;cursor:pointer">Send enquiry &rarr;</button>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer style="background:var(--navy);color:#fff;padding:32px 24px;text-align:center;font-size:12.5px">
+  <div style="max-width:1120px;margin:0 auto;color:#9FB0BD">Public Policy Foundation &middot; Independent; not a registered entity. <a href="/about/" style="color:var(--gold)">Method</a> &middot; <a href="/contact/" style="color:var(--gold)">Contact</a></div>
+</footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { city: 'Mumbai' };
+  renderVals() {
+    return { city: this.state.city, onCityChange: e => this.setState({ city: e.target.value }) };
+  }
+}
+</script>
+</body>
+</html>

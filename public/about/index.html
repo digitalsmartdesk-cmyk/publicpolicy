@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0A3D62;--green:#2E7D32;--gold:#C9A227;--grey:#EBE8E8;--bg:#FFFFFF;--surface:#F7F6F3;--ink:#12202B;--muted:#52606D;--rule:#DDD9CF}
+@media (prefers-color-scheme:dark){:root{--bg:#0D1B26;--surface:#142635;--ink:#EDEFF2;--muted:#9FB0BD;--rule:#22384A}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Montserrat',sans-serif}
+a{color:var(--navy);text-decoration:none}
+a:hover{color:var(--gold)}
+a:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:var(--bg);color:var(--ink)">
+<header style="position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--rule)">
+  <div style="max-width:1120px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+    <a href="/" style="display:flex;align-items:center;gap:10px;min-height:44px">
+      <img src="assets/ppf-logo.png" alt="Public Policy Foundation" style="height:36px;width:auto;display:block">
+      <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:16px;color:var(--ink)">Public Policy Foundation</span>
+    </a>
+    <nav style="display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;font-size:13.5px;font-weight:600">
+      <a href="/research/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">Research</a>
+      <a href="/data-and-tools/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">Data &amp; Tools</a>
+      <a href="/services/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">Services</a>
+      <a href="/about/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;background:var(--navy);color:#fff">About &amp; Method</a>
+      <a href="/contact/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main style="max-width:900px;margin:0 auto;padding:0 24px">
+
+  <section style="padding:48px 0 28px;max-width:44em">
+    <div style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green)">About &amp; Method</div>
+    <h1 style="margin:14px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(28px,4vw,40px);line-height:1.1">Better policy starts with credible evidence</h1>
+    <p style="margin:18px 0 0;font-size:16px;line-height:1.75;color:var(--muted)">Public Policy Foundation is an independent research group on India's economic and social development. We are not a registered entity: there is no donate button, no grants or CSR page, and no membership. We earn our keep by selling research &mdash; books, data and commissioned studies &mdash; to readers, professionals and institutions.</p>
+  </section>
+
+  <section style="padding:20px 0;border-top:1px solid var(--rule)">
+    <div style="background:var(--navy);color:#fff;border-radius:16px;padding:clamp(22px,3vw,32px)">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#E9C97A">Independence statement</div>
+      <p style="margin:12px 0 0;font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(19px,2.2vw,24px);line-height:1.4">Clients choose the question, not the conclusion.</p>
+      <p style="margin:12px 0 0;font-size:14.5px;line-height:1.7;color:#C9D3DC">Commissioned work follows the same sourcing standard as our books. We agree the scope and the sources before work begins; we do not agree the finding in advance, and we do not offer retainers, advocacy or lobbying services.</p>
+    </div>
+  </section>
+
+  <section style="padding:40px 0;border-top:1px solid var(--rule)">
+    <div style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green)">Our mission</div>
+    <p style="margin:14px 0 0;font-size:17px;line-height:1.7;color:var(--ink)">To undertake and disseminate rigorous policy research that generates actionable insights, informs public decision-making, and contributes to inclusive, sustainable and equitable development.</p>
+    <div style="margin-top:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px">
+      <div style="background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:22px">
+        <h3 style="margin:0;font-family:'Playfair Display',serif;font-weight:700;font-size:19px">Economic Development</h3>
+        <p style="margin:10px 0 0;font-size:14px;color:var(--muted);line-height:1.65">Growth, employment, industry, trade, agriculture, infrastructure, public finance and small business &mdash; the policies and conditions that shape economic opportunity.</p>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:22px">
+        <h3 style="margin:0;font-family:'Playfair Display',serif;font-weight:700;font-size:19px">Social Development</h3>
+        <p style="margin:10px 0 0;font-size:14px;color:var(--muted);line-height:1.65">Education, health, poverty and inequality, gender, housing and essential services &mdash; the public systems that shape wellbeing and quality of life.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:8px 0 40px;border-top:1px solid var(--rule)">
+    <div style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-top:32px">How our data is built</div>
+    <h2 style="margin:12px 0 16px;font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(22px,2.6vw,28px)">Every figure is tagged by how sure we are of it</h2>
+    <p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:var(--muted)">Each chart and table carries a source, a date, and one of six tiers:</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:10px">
+      <div style="background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:14px"><b style="font-size:13.5px">Primary</b><p style="margin:6px 0 0;font-size:12.5px;color:var(--muted)">Read directly from the original release.</p></div>
+      <div style="background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:14px"><b style="font-size:13.5px">Calculated</b><p style="margin:6px 0 0;font-size:12.5px;color:var(--muted)">Derived from primary figures by a stated formula.</p></div>
+      <div style="background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:14px"><b style="font-size:13.5px">Compiled</b><p style="margin:6px 0 0;font-size:12.5px;color:var(--muted)">Assembled from more than one primary source.</p></div>
+      <div style="background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:14px"><b style="font-size:13.5px">Press report</b><p style="margin:6px 0 0;font-size:12.5px;color:var(--muted)">From news coverage of an unpublished release; flagged to verify.</p></div>
+      <div style="background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:14px"><b style="font-size:13.5px">Illustrative</b><p style="margin:6px 0 0;font-size:12.5px;color:var(--muted)">A worked example, not a measured value.</p></div>
+      <div style="background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:14px"><b style="font-size:13.5px">To source</b><p style="margin:6px 0 0;font-size:12.5px;color:var(--muted)">Named as missing, not filled with a guess.</p></div>
+    </div>
+    <p style="margin:20px 0 0;font-size:14px;line-height:1.7;color:var(--muted)">Where two sources disagree, our books show both. Corrections to published figures are listed on each book's own corrections page, dated. Charts and tracker data carry the date they were last checked.</p>
+  </section>
+
+  <section style="padding:8px 0 56px;border-top:1px solid var(--rule)">
+    <div style="margin-top:32px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:clamp(22px,3vw,32px)">
+      <div style="max-width:40em">
+        <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:19px">Questions about a figure, or about commissioning research?</div>
+        <p style="margin:6px 0 0;font-size:14px;color:var(--muted)">We're glad to walk through our sourcing on any chart.</p>
+      </div>
+      <a href="/contact/" style="display:inline-flex;align-items:center;min-height:46px;padding:0 20px;border-radius:10px;background:var(--navy);color:#fff;font-weight:700;font-size:14px">Contact us &rarr;</a>
+    </div>
+  </section>
+
+</main>
+
+<footer style="background:var(--navy);color:#fff;padding:32px 24px;text-align:center;font-size:12.5px">
+  <div style="max-width:1120px;margin:0 auto;color:#9FB0BD">Public Policy Foundation &middot; Independent; not a registered entity.</div>
+</footer>
+</div>
+
+</x-dc>
+</body>
+</html>

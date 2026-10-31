@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0A3D62;--green:#2E7D32;--gold:#C9A227;--grey:#EBE8E8;--bg:#FFFFFF;--surface:#F7F6F3;--ink:#12202B;--muted:#52606D;--rule:#DDD9CF}
+@media (prefers-color-scheme:dark){:root{--bg:#0D1B26;--surface:#142635;--ink:#EDEFF2;--muted:#9FB0BD;--rule:#22384A}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Montserrat',sans-serif}
+a{color:var(--navy);text-decoration:none}
+a:hover{color:var(--gold)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:var(--bg);color:var(--ink)">
+<header style="position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--rule)">
+  <div style="max-width:1120px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+    <a href="/" style="display:flex;align-items:center;gap:10px;min-height:44px">
+      <img src="assets/ppf-logo.png" alt="Public Policy Foundation" style="height:36px;width:auto;display:block">
+      <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:16px;color:var(--ink)">Public Policy Foundation</span>
+    </a>
+    <nav style="display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;font-size:13.5px;font-weight:600">
+      <a href="/research/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">Research</a>
+      <a href="/data-and-tools/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;background:var(--navy);color:#fff">Data &amp; Tools</a>
+      <a href="/services/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">Services</a>
+      <a href="/about/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">About &amp; Method</a>
+      <a href="/contact/" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:8px;color:var(--ink)">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main style="max-width:1120px;margin:0 auto;padding:0 24px">
+
+  <section style="padding:48px 0 32px;max-width:46em">
+    <div style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green)">Data &amp; Tools</div>
+    <h1 style="margin:14px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(28px,4vw,42px);line-height:1.1">The numbers behind the books, ready to use</h1>
+    <p style="margin:18px 0 0;font-size:16px;line-height:1.7;color:var(--muted)">A live tracker, an interactive calculator, and licensed chart and data packs for every publication. Every figure is dated and sourced.</p>
+  </section>
+
+  <!-- TRACKER -->
+  <section style="padding:28px 0;border-top:1px solid var(--rule);display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center">
+    <div style="min-width:0">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)">Live &middot; updates quarterly</div>
+      <h2 style="margin:10px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:24px">The Household Balance Sheet tracker</h2>
+      <p style="margin:12px 0 0;font-size:15px;line-height:1.7;color:var(--muted)">Household financial liabilities rose from 36.4% to 45.9% of GDP in fifteen quarters, June 2022 to March 2026 &mdash; almost twice the growth rate of the economy itself. Nine indicators, each with a value, a trend and a peer anchor.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+        <a href="/hhbalsheet/tracker/" style="display:inline-flex;align-items:center;min-height:46px;padding:0 18px;border-radius:9px;background:var(--navy);color:#fff;font-weight:700;font-size:13.5px">Open the live tracker &rarr;</a>
+        <a href="/services/#briefing" style="display:inline-flex;align-items:center;min-height:46px;padding:0 18px;border-radius:9px;border:1.5px solid var(--rule);color:var(--ink);font-weight:700;font-size:13.5px">License the spreadsheet</a>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:24px;text-align:center">
+      <div style="display:flex;align-items:baseline;justify-content:center;gap:14px">
+        <div><div style="font-family:'Playfair Display',serif;font-weight:800;font-size:34px;color:var(--muted)">36.4%</div><div style="font-size:11.5px;color:var(--muted)">Jun 2022</div></div>
+        <div style="font-size:22px;color:var(--gold)">&rarr;</div>
+        <div><div style="font-family:'Playfair Display',serif;font-weight:800;font-size:34px;color:var(--navy)">45.9%</div><div style="font-size:11.5px;color:var(--muted)">Mar 2026</div></div>
+      </div>
+      <p style="margin:14px 0 0;font-size:12px;color:var(--muted)">Household financial liabilities, % of GDP. Source: RBI Bulletin, September 2026, Table 52(b).</p>
+    </div>
+  </section>
+
+  <!-- CALCULATOR -->
+  <section style="padding:40px 0;border-top:1px solid var(--rule);display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center">
+    <div style="min-width:0;order:2">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)">Interactive</div>
+      <h2 style="margin:10px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:24px">The seat-allocation calculator</h2>
+      <p style="margin:12px 0 0;font-size:15px;line-height:1.7;color:var(--muted)">Set a House size and a rule &mdash; Freeze, Population, a Mixture, or Add-and-Protect &mdash; and the calculator gives every state's seats, the change from today, and the change in tax share, built on 2011 Census population. It is a way to check the arithmetic, not an argument.</p>
+      <a href="/money-and-seats/#ch-12" style="display:inline-flex;align-items:center;min-height:46px;padding:0 18px;border-radius:9px;background:var(--navy);color:#fff;font-weight:700;font-size:13.5px;margin-top:16px">Open the calculator &rarr;</a>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:24px;order:1">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)">From the book</div>
+      <p style="margin:10px 0 0;font-size:14px;line-height:1.65;color:var(--ink)">If the 543 seats were divided afresh by 2011 population, dozens of seats would change state. Uttar Pradesh and Bihar would gain; several southern states would lose, even with no change in the size of the House.</p>
+      <p style="margin:10px 0 0;font-size:12px;color:var(--muted)">Source: Census of India 2011; <i>Money and Seats</i>, Chapters 8&ndash;9.</p>
+    </div>
+  </section>
+
+  <!-- PACKS -->
+  <section style="padding:40px 0 16px;border-top:1px solid var(--rule)">
+    <div style="font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-top:32px">Chart &amp; data packs</div>
+    <h2 style="margin:10px 0 8px;font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(22px,2.6vw,28px)">Every chart, source-noted, in PNG, SVG and spreadsheet</h2>
+    <p style="margin:0 0 20px;font-size:14.5px;color:var(--muted);max-width:46em;line-height:1.65">Licensed for internal and client-facing use in your own reports and presentations. Not for resale or redistribution as a dataset.</p>
+  </section>
+
+  <section style="padding-bottom:48px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px">
+    <div style="background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px">
+      <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:17px">Rich Country, Poor Citizens</div>
+      <div style="font-size:12.5px;color:var(--muted)">353 charts</div>
+      <div style="font-family:'Playfair Display',serif;font-weight:800;font-size:22px;margin-top:4px">Rs 999</div>
+      <a href="/rich-country-poor-citizens/#bundle" style="margin-top:6px;font-weight:700;font-size:13px">Preview &amp; buy &rarr;</a>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px">
+      <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:17px">India's Cities</div>
+      <div style="font-size:12.5px;color:var(--muted)">103 charts</div>
+      <div style="font-family:'Playfair Display',serif;font-weight:800;font-size:22px;margin-top:4px">Rs 799</div>
+      <a href="/cities/buy/" style="margin-top:6px;font-weight:700;font-size:13px">Preview &amp; buy &rarr;</a>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px">
+      <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:17px">The Household Balance Sheet</div>
+      <div style="font-size:12.5px;color:var(--muted)">40+ charts</div>
+      <div style="font-family:'Playfair Display',serif;font-weight:800;font-size:22px;margin-top:4px">Rs 699</div>
+      <a href="/hhbalsheet/buy/" style="margin-top:6px;font-weight:700;font-size:13px">Preview &amp; buy &rarr;</a>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px">
+      <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:17px">The AI Squeeze</div>
+      <div style="font-size:12.5px;color:var(--muted)">40+ charts</div>
+      <div style="font-family:'Playfair Display',serif;font-weight:800;font-size:22px;margin-top:4px">Rs 499</div>
+      <a href="/ai-squeeze/buy/" style="margin-top:6px;font-weight:700;font-size:13px">Preview &amp; buy &rarr;</a>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px">
+      <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:17px">Money and Seats</div>
+      <div style="font-size:12.5px;color:var(--muted)">State-by-state tables</div>
+      <div style="font-family:'Playfair Display',serif;font-weight:800;font-size:22px;margin-top:4px">Rs 499</div>
+      <a href="/money-and-seats/buy/" style="margin-top:6px;font-weight:700;font-size:13px">Preview &amp; buy &rarr;</a>
+    </div>
+  </section>
+
+  <section style="padding:8px 0 56px;border-top:1px solid var(--rule)">
+    <div style="margin-top:32px;background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:clamp(22px,3vw,32px);display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between">
+      <div style="max-width:40em">
+        <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:19px">Need a cut of the data we haven't published?</div>
+        <p style="margin:6px 0 0;font-size:14px;color:var(--muted)">We take on custom studies and bespoke data requests, scoped to your question.</p>
+      </div>
+      <a href="/services/" style="display:inline-flex;align-items:center;min-height:46px;padding:0 20px;border-radius:10px;background:var(--navy);color:#fff;font-weight:700;font-size:14px">Commission a study &rarr;</a>
+    </div>
+  </section>
+
+</main>
+
+<footer style="background:var(--navy);color:#fff;padding:32px 24px;text-align:center;font-size:12.5px">
+  <div style="max-width:1120px;margin:0 auto;color:#9FB0BD">Public Policy Foundation &middot; Independent; not a registered entity. <a href="/about/" style="color:var(--gold)">Method</a> &middot; <a href="/contact/" style="color:var(--gold)">Contact</a></div>
+</footer>
+</div>
+
+</x-dc>
+</body>
+</html>
